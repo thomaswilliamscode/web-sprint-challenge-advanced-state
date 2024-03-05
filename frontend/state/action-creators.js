@@ -1,5 +1,16 @@
 // ❗ You don't need to add extra action creators to achieve MVP
-export function moveClockwise() { }
+import { MOVE_CLOCKWISE } from './action-types.js';
+
+
+
+
+
+export function moveClockwise() { 
+  return {
+    type: MOVE_CLOCKWISE,
+  }
+
+}
 
 export function moveCounterClockwise() { }
 
