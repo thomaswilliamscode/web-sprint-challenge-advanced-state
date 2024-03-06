@@ -1,30 +1,87 @@
 // ❗ You don't need to add extra reducers to achieve MVP
 import { combineReducers, } from 'redux'
-import { MOVE_CLOCKWISE, } from './action-types.js'
+import {
+	MOVE_CLOCKWISE,
+	MOVE_COUNTERCLOCKWISE,
+	SET_QUIZ_INTO_STATE,
+	SET_SELECTED_ANSWER,
+	SET_INFO_MESSAGE,
+	INPUT_CHANGE,
+	RESET_FORM,
+} from './action-types.js';
+
+import Axios from 'axios';
+
+
 
 
 
 const initialWheelState = 0
 function wheel(state = initialWheelState, action) {
+
+  const moveForward = () => {
+		if (state + 1 <= 5) {
+      console.log(state + 1)
+			return state + 1
+		} else {
+      console.log(0)
+      return 0
+    }
+	};
+
+  const moveBackward = () => {
+		if (state - 1 >= 0) {
+			return  state - 1;
+		} else {
+			return 5;
+		}
+	};
+
   const { type, payload } = action
   switch(type) {
     case MOVE_CLOCKWISE:
-      console.log('clockwise')
-      // return the state + 1
-      return state
+      return moveForward()
+    case MOVE_COUNTERCLOCKWISE:
+      return moveBackward()
     default:
       return state
   }
 }
 
+    let getUrl = 'http://localhost:9000/api/quiz/next';
+  const getQuiz = () => {
+		return Axios.get(getUrl)
+			.then((res) => res.data )
+			.catch((err) => console.log(err.message));
+	};
+
 const initialQuizState = null
+
 function quiz(state = initialQuizState, action) {
-  return state
+
+  switch(action.type) {
+    case SET_QUIZ_INTO_STATE:
+      return {...state, ...action.payload }
+    default:
+      return state
+  }
 }
 
 const initialSelectedAnswerState = null
 function selectedAnswer(state = initialSelectedAnswerState, action) {
-  return state
+  switch(action.type) {
+    case SET_SELECTED_ANSWER:
+      console.log('in the reducer')
+      console.log(action)
+      return {
+        ...state,
+        quiz_id: action.payload.quiz_id,
+        answer_id: action.payload.answer_id
+      }
+    default: 
+      return state;
+  }
+  
 }
 
 const initialMessageState = ''
