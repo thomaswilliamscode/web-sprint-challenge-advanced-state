@@ -10,6 +10,8 @@ import {
 	RESET_FORM,
 } from './action-types.js';
 
+import { postAnswer } from './action-creators.js'
+
 import Axios from 'axios';
 
 
@@ -21,10 +23,8 @@ function wheel(state = initialWheelState, action) {
 
   const moveForward = () => {
 		if (state + 1 <= 5) {
-      console.log(state + 1)
 			return state + 1
 		} else {
-      console.log(0)
       return 0
     }
 	};
@@ -62,6 +62,8 @@ function quiz(state = initialQuizState, action) {
   switch(action.type) {
     case SET_QUIZ_INTO_STATE:
       return {...state, ...action.payload }
+    case INPUT_CHANGE:
+      return null;
     default:
       return state
   }
@@ -71,12 +73,9 @@ const initialSelectedAnswerState = null
 function selectedAnswer(state = initialSelectedAnswerState, action) {
   switch(action.type) {
     case SET_SELECTED_ANSWER:
-      console.log('in the reducer')
-      console.log(action)
       return {
-        ...state,
         quiz_id: action.payload.quiz_id,
-        answer_id: action.payload.answer_id
+        answer_id: action.payload.answer_id,
       }
     default: 
       return state;
@@ -86,7 +85,13 @@ function selectedAnswer(state = initialSelectedAnswerState, action) {
 
 const initialMessageState = ''
 function infoMessage(state = initialMessageState, action) {
-  return state
+  switch(action.type) {
+    case SET_INFO_MESSAGE:
+      return action.payload
+    default:
+      return state;
+  }
+  
 }
 
 const initialFormState = {

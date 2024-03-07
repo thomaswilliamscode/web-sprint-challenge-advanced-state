@@ -42,6 +42,7 @@ export default function Quiz(props) {
 	const [answer2, setAnswer2] = useState(initialAnswer);
   const [info, setInfo] = useState(initialInfo)
   const [submit, setSubmit] = useState(true)
+  const [response, setResponse] = useState('')
 
   // if submit === false, submit button disabled
 
@@ -50,8 +51,6 @@ export default function Quiz(props) {
   // if selected, add class selected
 
 useEffect(() => {
-    console.log('useEffect triggered');
-		console.log(quiz);
 	if (quiz && quiz.answers && quiz.answers.length >= 2) {
 		setAnswer1({
 			...answer1,
@@ -86,8 +85,18 @@ const onSelect = (e) => {
 }
 
 const onSubmit = () => {
-  console.log(info)
   dispatch(selectAnswer(info));
+
+  dispatch(postAnswer(info))
+    .then((res)=> {
+      setResponse(res)
+      
+    })
+
+  setSubmit(true);
+
+
+  
 }
 
 
@@ -127,8 +136,7 @@ const onSubmit = () => {
 						)}
 					</div>
 
-					<button disabled = {submit}
-            id='submitAnswerBtn' onClick={onSubmit}>
+					<button disabled={submit} id='submitAnswerBtn' onClick={onSubmit}>
 						Submit answer
 					</button>
 				</>

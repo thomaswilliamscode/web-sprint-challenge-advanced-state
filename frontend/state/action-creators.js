@@ -9,6 +9,8 @@ import {
 	RESET_FORM,
 } from './action-types.js';
 
+import combineReducers from './reducer.js'
+
 import Axios from 'axios'
 
 
@@ -46,6 +48,12 @@ const getQuiz = () => {
     .catch( (err) => err.message )
 }
 
+const resetQuiz = () => {
+  return {
+		type: INPUT_CHANGE,
+	};
+}
+
 export function setQuiz() {
   return (dispatch) => {
     return getQuiz()
@@ -57,7 +65,6 @@ export function setQuiz() {
         return quizData;
       })
       .catch( (err) => {
-        console.log(err.message)
       })
   }
 }
@@ -77,12 +84,31 @@ export function fetchQuiz() {
   }
 }
 
-const answerURL = 'http://localhost:9000/api/quiz/answer';
+//   const answerURL = 'http://localhost:9000/api/quiz/answer';
 
-export function postAnswer() {
+// const getAnswer = () => {
+//   let info = combineReducers.selectedAnswer
+// 	return Axios.post(answerURL, info)
+// 		.then((res) => res.data)
+// 		.catch((err) => err.message);
+// };
+
+export function postAnswer(payload) {
+
+  const answerURL = 'http://localhost:9000/api/quiz/answer';
   return function (dispatch) {
     // On successful POST:
-      Axios.post(answerURL)
+      return Axios.post(answerURL, payload)
+        .then( (res) => {
+          dispatch({
+						type: SET_INFO_MESSAGE,
+						payload: res.data.message,
+					});
+          dispatch(resetQuiz());
+          dispatch(setQuiz());
+          return res.data.message
+        })
+        .catch( (err) => console.log(err.message) )
     // - Dispatch an action to reset the selected answer state
     // - Dispatch an action to set the server message to state
     // - Dispatch the fetching of the next quiz
