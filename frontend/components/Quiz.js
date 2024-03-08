@@ -117,7 +117,7 @@ const onSubmit = () => {
 							>
 								{answer1.text}
 								<button id={answer1.id} onClick={onSelect}>
-									{`${info.answer_id === answer1.id ? 'Selected' : 'Select'}`}
+									{`${info.answer_id === answer1.id ? 'SELECTED' : 'Select'}`}
 								</button>
 							</div>
 						)}
@@ -130,7 +130,7 @@ const onSubmit = () => {
 							>
 								{answer2.text}
 								<button id={answer2.id} onClick={onSelect}>
-									{`${info.answer_id === answer2.id ? 'Selected' : 'Select'}`}
+									{`${info.answer_id === answer2.id ? 'SELECTED' : 'Select'}`}
 								</button>
 							</div>
 						)}

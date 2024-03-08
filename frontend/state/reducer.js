@@ -95,11 +95,31 @@ function infoMessage(state = initialMessageState, action) {
 }
 
 const initialFormState = {
-  newQuestion: '',
-  newTrueAnswer: '',
-  newFalseAnswer: '',
+  question_text: '',
+  true_answer_text: '',
+  false_answer_text: '',
 }
 function form(state = initialFormState, action) {
+  switch(action.type) {
+    case 'form_data_change':
+      return {
+				...state,
+				question_text: action.payload.question_text,
+				true_answer_text: action.payload.true_answer_text,
+				false_answer_text: action.payload.false_answer_text,
+			};
+    case 'grab_form_data':
+      return state;
+    case 'clear_form':
+      return {
+        ...initialFormState,
+      }
+    case 'update_form':
+      return {
+        ...state,
+        ...action.payload,
+      }
+  }
   return state
 }
 

@@ -122,3 +122,51 @@ export function postQuiz() {
   }
 }
 // ❗ On promise rejections, use log statements or breakpoints, and put an appropriate error message in state
+
+export function formData(payload) {
+  return {
+    type: 'form_data_change',
+    payload: payload,
+  }
+}
+
+export function grabFormData() {
+  return {
+    type: 'grab_form_data',
+  }
+}
+
+export function updateForm (payload) {
+  return {
+		type: 'update_form',
+    payload: {...payload},
+	};
+}
+
+
+export function postForm() {
+  const post = 'http://localhost:9000/api/quiz/new';
+
+  return function (dispatch, getState) {
+    const formData = getState().form
+
+    
+    return Axios.post(post, formData)
+      .then( (res) => {
+        let info = `Congrats: "${formData.question_text}" is a great question!`;
+
+        dispatch( {
+					type: SET_INFO_MESSAGE,
+					payload: info,
+				});
+
+        dispatch({
+					type: 'clear_form',
+				});
+
+      } )
+      .catch( (err) => {
+        console.log(err)
+      } )
+  }
+}
