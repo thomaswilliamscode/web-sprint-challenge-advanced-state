@@ -22,6 +22,11 @@ import {
 	fetchQuiz,
 	postAnswer,
 	postQuiz,
+	quizInfo,
+	createQuiz,
+	resetQuiz,
+	getAnswer,
+	setQuizInfo,
 } from '../state/action-creators.js';
 
 export default function Quiz(props) {
@@ -46,12 +51,18 @@ export default function Quiz(props) {
 
   // if submit === false, submit button disabled
 
+//   const quizInfo = {
+// 	type: 'quiz_info',
+// 	payload: quiz,
+//   }
+
 
 
   // if selected, add class selected
 
 useEffect(() => {
 	if (quiz && quiz.answers && quiz.answers.length >= 2) {
+		console.log('quiz Info in component useEffect', quiz.quiz_id);
 		setAnswer1({
 			...answer1,
 			text: quiz.answers[0].text,
@@ -68,24 +79,44 @@ useEffect(() => {
       quiz_id: quiz.quiz_id,
     })
 	}
+
+	
 }, [quiz, setAnswer1, setAnswer2]);
 
+const answer = useSelector((state) => state.selectedAnswer);
+
+const reducerQuiz = useSelector( (state) => state.quiz )
+
+
 	useEffect(() => {
-		dispatch(setQuiz());
+		dispatch(quizInfo());
+		if (!quiz) {
+			dispatch(createQuiz())
+		} else if (answer && answer.answer_id && quiz) {
+			setInfo({
+				...info,
+				answer_id: answer.answer_id,
+				quiz_id: quiz.quiz_id,
+			});
+			setSubmit(false);
+		}
 	}, [dispatch]);
 
 const onSelect = (e) => {
   let id = e.target.id;
+  console.log('onSelect', id)
+  console.log('reducer Quiz', reducerQuiz);
   setInfo({
     ...info,
     answer_id: id,
   })
   setSubmit(false)
-
+  dispatch(selectAnswer(id)); 
 }
 
 const onSubmit = () => {
-  dispatch(selectAnswer(info));
+	console.log('onSubmit', info)
+  dispatch(setQuizInfo(info));
 
   dispatch(postAnswer(info))
     .then((res)=> {

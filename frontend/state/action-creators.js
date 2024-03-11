@@ -10,6 +10,7 @@ import {
 } from './action-types.js';
 
 import combineReducers from './reducer.js'
+import {useSelector} from 'react-redux'
 
 import Axios from 'axios'
 
@@ -32,9 +33,14 @@ export function moveCounterClockwise() {
 }
 
 export function selectAnswer(payload) { 
-  return {
-		type: SET_SELECTED_ANSWER,
-		payload: payload,
+  console.log('inside selectAnswer', payload)
+  return (dispatch) => {
+    dispatch({
+			type: SET_SELECTED_ANSWER,
+			payload: {
+				answer_id: payload
+			},
+		});
 	};
 }
 
@@ -48,25 +54,92 @@ const getQuiz = () => {
     .catch( (err) => err.message )
 }
 
-const resetQuiz = () => {
+export const resetQuiz = () => {
   return {
 		type: INPUT_CHANGE,
 	};
 }
 
-export function setQuiz() {
-  return (dispatch) => {
-    return getQuiz()
-      .then( (quizData) => {
-        dispatch({
-          type: SET_QUIZ_INTO_STATE,
-          payload: quizData,
-        });
-        return quizData;
-      })
-      .catch( (err) => {
-      })
+export function quizInfo (){
+  console.log('getting quizInfo')
+  return (dispatch) =>  {
+    dispatch({
+			type: 'get_quiz_info',
+		});
   }
+}
+
+export function setQuizInfo (quiz_info) {
+  return {
+    type: 'set_quiz_info',
+    payload: quiz_info,
+  }
+}
+
+// just finished with get answer, make sure its working 
+
+export function getAnswer () {
+  console.log('getting answer')
+  return {
+		type: 'get_answer',
+	};
+}
+
+
+export function createQuiz() {
+			return (dispatch) => {
+				return getQuiz()
+					.then((quizData) => {
+						dispatch({
+							type: SET_QUIZ_INTO_STATE,
+							payload: quizData,
+						});
+						return quizData;
+					})
+					.catch((err) => {});
+			};
+}
+
+
+
+// check if quiz is in state
+
+// if quiz is not in state initialize quiz
+
+// if quiz is in state, return quiz state
+
+// if user wants new quiz, initialize new quiz
+
+
+// export function setQuiz() {
+//   console.log('Setting Quiz')
+// 		return (dispatch) => {
+//       console.log('in dispatch')
+// 			return getQuiz()
+// 				.then((quizData) => {
+//           console.log(quizData)
+// 					dispatch({
+// 						type: SET_QUIZ_INTO_STATE,
+// 						payload: quizData,
+// 					});
+// 					return quizData;
+// 				})
+// 				.catch((err) => {});
+// 		};
+// }
+
+  // const initialAnswer = {
+	// 	text: '',
+	// 	id: '',
+	// };
+
+	// const initialInfo = {
+	// 	quiz_id: '',
+	// 	answer_id: '',
+	// };
+
+export function nameHere() {
+  
 }
 
 export function inputChange() { }
@@ -105,7 +178,7 @@ export function postAnswer(payload) {
 						payload: res.data.message,
 					});
           dispatch(resetQuiz());
-          dispatch(setQuiz());
+          dispatch(createQuiz())
           return res.data.message
         })
         .catch( (err) => console.log(err.message) )

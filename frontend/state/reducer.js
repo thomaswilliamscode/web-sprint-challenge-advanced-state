@@ -10,9 +10,11 @@ import {
 	RESET_FORM,
 } from './action-types.js';
 
-import { postAnswer } from './action-creators.js'
+import { postAnswer, } from './action-creators.js';
+import thunk from 'redux-thunk'
 
 import Axios from 'axios';
+
 
 
 
@@ -57,29 +59,52 @@ function wheel(state = initialWheelState, action) {
 
 const initialQuizState = null
 
+// answers
+// : 
+// (2) [{…}, {…}]
+// question
+// : 
+// "What is a closure?"
+// quiz_id
+// : 
+// "lxpjs"
+
+
 function quiz(state = initialQuizState, action) {
 
-  switch(action.type) {
-    case SET_QUIZ_INTO_STATE:
-      return {...state, ...action.payload }
-    case INPUT_CHANGE:
-      return null;
-    default:
-      return state
-  }
+  switch (action.type) {
+		case SET_QUIZ_INTO_STATE:
+			return { ...state, ...action.payload };
+		case INPUT_CHANGE:
+			return null;
+		case 'get_quiz_info':
+      console.log('get_quiz_info in state', state)
+			return state;
+		case 'set_quiz_info':
+			return {
+				...state,
+				...action.payload,
+			};
+		default:
+			return state;
+	}
 }
 
 const initialSelectedAnswerState = null
 function selectedAnswer(state = initialSelectedAnswerState, action) {
-  switch(action.type) {
-    case SET_SELECTED_ANSWER:
-      return {
-        quiz_id: action.payload.quiz_id,
-        answer_id: action.payload.answer_id,
-      }
-    default: 
-      return state;
-  }
+  console.log(action)
+  switch (action.type) {
+		case SET_SELECTED_ANSWER:
+      console.log('inside reducer select Answer')
+			return {
+				quiz_id: action.payload.quiz_id,
+				answer_id: action.payload.answer_id,
+			};
+		case 'get_answer':
+			return state.answer_id;
+		default:
+			return state;
+	}
   
 }
 
